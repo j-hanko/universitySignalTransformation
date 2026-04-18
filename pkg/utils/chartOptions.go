@@ -9,7 +9,8 @@ import (
 	"github.com/go-echarts/go-echarts/v2/types"
 )
 
-func timeAxisLabels(Tc, fs float64, step int) []string {
+// X axis options
+func TimeAxisLabels(Tc, fs float64, step int) []string {
 	N := int(math.Round(Tc * fs))
 	labels := make([]string, 0, N+1)
 
@@ -24,7 +25,8 @@ func timeAxisLabels(Tc, fs float64, step int) []string {
 	return labels
 }
 
-func setChartOptions(line *charts.Line, title, subtitle, xAxisName string) {
+// Chart description and options
+func SetChartOptions(line *charts.Line, title, subtitle, xAxisName string) {
 	line.SetGlobalOptions(
 		charts.WithInitializationOpts(opts.Initialization{Theme: types.ThemeWonderland}),
 		charts.WithTitleOpts(opts.Title{
