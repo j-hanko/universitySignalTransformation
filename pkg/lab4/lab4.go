@@ -19,7 +19,7 @@ const (
 	fm   = 10
 )
 
-func signalGenerationExerise1(Tc, fs, fn, fm, useCase float64, formula string) []float64 {
+func SignalGenerationExerise1(Tc, fs, fn, fm, useCase float64, formula string) []float64 {
 	N := int(math.Round(Tc * fs))
 	sliceOfData := make([]float64, 0)
 	if formula == "M" {
@@ -54,9 +54,9 @@ func signalGenerationExerise1(Tc, fs, fn, fm, useCase float64, formula string) [
 }
 
 func DrawExercise_Za(w http.ResponseWriter, _ *http.Request) {
-	Za_a := signalGenerationExerise1(Tc, fs, fn, fm, 0.5, "Z_A")
-	Za_b := signalGenerationExerise1(Tc, fs, fn, fm, 7.5, "Z_A")
-	Za_c := signalGenerationExerise1(Tc, fs, fn, fm, 25.5, "Z_A")
+	Za_a := SignalGenerationExerise1(Tc, fs, fn, fm, 0.5, "Z_A")
+	Za_b := SignalGenerationExerise1(Tc, fs, fn, fm, 7.5, "Z_A")
+	Za_c := SignalGenerationExerise1(Tc, fs, fn, fm, 25.5, "Z_A")
 
 	Re_a, Im_a := utils.DFT(Za_a)
 	Re_b, Im_b := utils.DFT(Za_b)
@@ -109,9 +109,9 @@ func DrawExercise_Za(w http.ResponseWriter, _ *http.Request) {
 }
 
 func DrawExercise_Zf(w http.ResponseWriter, _ *http.Request) {
-	Zf_a := signalGenerationExerise1(Tc, fs, fn, fm, 0.5, "Z_F")
-	Zf_b := signalGenerationExerise1(Tc, fs, fn, fm, 2.3, "Z_F")
-	Zf_c := signalGenerationExerise1(Tc, fs, fn, fm, 11.3, "Z_F")
+	Zf_a := SignalGenerationExerise1(Tc, fs, fn, fm, 0.5, "Z_F")
+	Zf_b := SignalGenerationExerise1(Tc, fs, fn, fm, 2.3, "Z_F")
+	Zf_c := SignalGenerationExerise1(Tc, fs, fn, fm, 11.3, "Z_F")
 
 	Re_a, Im_a := utils.DFT(Zf_a)
 	Re_b, Im_b := utils.DFT(Zf_b)
@@ -163,9 +163,9 @@ func DrawExercise_Zf(w http.ResponseWriter, _ *http.Request) {
 }
 
 func DrawExercise_Zp(w http.ResponseWriter, _ *http.Request) {
-	Zp_a := signalGenerationExerise1(Tc, fs, fn, fm, 0.5, "Z_P")
-	Zp_b := signalGenerationExerise1(Tc, fs, fn, fm, 2.7, "Z_P")
-	Zp_c := signalGenerationExerise1(Tc, fs, fn, fm, 9.7, "Z_P")
+	Zp_a := SignalGenerationExerise1(Tc, fs, fn, fm, 0.5, "Z_P")
+	Zp_b := SignalGenerationExerise1(Tc, fs, fn, fm, 2.7, "Z_P")
+	Zp_c := SignalGenerationExerise1(Tc, fs, fn, fm, 9.7, "Z_P")
 
 	Re_a, Im_a := utils.DFT(Zp_a)
 	Re_b, Im_b := utils.DFT(Zp_b)

@@ -11,3 +11,11 @@ func FromSliceToLineData(slice []float64) []opts.LineData {
 	}
 	return sliceOfData
 }
+
+func FromSliceToScatterData(data []float64) []opts.ScatterData {
+	items := make([]opts.ScatterData, 0, len(data))
+	for _, v := range data {
+		items = append(items, opts.ScatterData{Value: v})
+	}
+	return items
+}

@@ -80,3 +80,35 @@ func SetChartOptions(line *charts.Line, title, subtitle, xAxisName string) {
 		}),
 	)
 }
+
+func SetSpectrumChartOptions(line *charts.Line, title, subtitle string) {
+	line.SetGlobalOptions(
+		charts.WithInitializationOpts(opts.Initialization{Theme: types.ThemeWonderland}),
+		charts.WithTitleOpts(opts.Title{
+			Title:    title,
+			Subtitle: subtitle,
+		}),
+		charts.WithXAxisOpts(opts.XAxis{
+			Name:         "Częstotliwość [Hz]",
+			NameLocation: "middle",
+			NameGap:      30,
+			Min:          0,
+			Max:          150,
+			AxisLabel: &opts.AxisLabel{
+				Show:     opts.Bool(true),
+				Interval: "0",
+			},
+		}),
+		charts.WithYAxisOpts(opts.YAxis{
+			Name:         "Amplituda [dB]",
+			NameLocation: "middle",
+			NameGap:      50,
+			Position:     "left",
+			Min:          -80,
+			Max:          30,
+			AxisLabel: &opts.AxisLabel{
+				Show: opts.Bool(true),
+			},
+		}),
+	)
+}
