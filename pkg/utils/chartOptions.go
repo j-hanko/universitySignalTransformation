@@ -25,6 +25,33 @@ func TimeAxisLabels(Tc, fs float64, step int) []string {
 	return labels
 }
 
+func FrequencyAxisLabels(Tc, fs float64, step int) []string {
+	N := int(math.Round(Tc * fs))
+	labels := make([]string, 0, N/2)
+
+	for k := 0; k < N/2; k++ {
+		if k%step == 0 {
+			fk := float64(k) * fs / float64(N)
+			labels = append(labels, fmt.Sprintf("%.2f", fk))
+		} else {
+			labels = append(labels, "")
+		}
+	}
+	return labels
+}
+
+func LogSpectrumPoints(Tc, fs float64, spectrumDB []float64) []opts.ScatterData {
+	N := int(math.Round(Tc * fs))
+	points := make([]opts.ScatterData, 0, len(spectrumDB)-1)
+
+	for k := 1; k < len(spectrumDB); k++ {
+		fk := float64(k) * fs / float64(N)
+		points = append(points, opts.ScatterData{Value: []interface{}{fk, spectrumDB[k]}})
+	}
+
+	return points
+}
+
 // Chart description and options
 func SetChartOptions(line *charts.Line, title, subtitle, xAxisName string) {
 	line.SetGlobalOptions(
