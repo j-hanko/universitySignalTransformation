@@ -104,28 +104,6 @@ func signalGenerationExerise2(Tc, fs, f1, f2, alpha, beta float64, formula strin
 	return sliceOfData
 }
 
-func spectrum(xRe, xIm []float64) []float64 {
-	N := len(xRe)
-	M := make([]float64, 0, N/2)
-
-	for k := 0; k < N/2; k++ {
-		value := math.Sqrt(xRe[k]*xRe[k]+xIm[k]*xIm[k]) / float64(N)
-		M = append(M, value)
-	}
-
-	return M
-}
-
-func mzHatSpectrum(alpha, beta float64, Mx, My []float64) []float64 {
-	sliceOfData := make([]float64, 0, len(Mx))
-
-	for i := 0; i < len(Mx); i++ {
-		value := alpha*Mx[i] + beta*My[i]
-		sliceOfData = append(sliceOfData, value)
-	}
-	return sliceOfData
-}
-
 func stripes(f, fs float64, H int, formula string) int {
 	count := 0
 
@@ -167,9 +145,9 @@ func DrawExercise1(w http.ResponseWriter, _ *http.Request) {
 	yRe, yIm := utils.FFT(y)
 	zRe, zIm := utils.FFT(z)
 
-	Mx := spectrum(xRe, xIm)
-	My := spectrum(yRe, yIm)
-	Mz := spectrum(zRe, zIm)
+	Mx := utils.Spectrum(xRe, xIm)
+	My := utils.Spectrum(yRe, yIm)
+	Mz := utils.Spectrum(zRe, zIm)
 
 	chart1 := charts.NewLine()
 	utils.SetChartOptions(chart1, "Laboratorium 3", "Zadanie 1 - x(t)", "Czas [s]")
@@ -221,11 +199,11 @@ func DrawExercise2(w http.ResponseWriter, _ *http.Request) {
 	yRe, yIm := utils.FFT(y)
 	zRe, zIm := utils.FFT(z)
 
-	Mx := spectrum(xRe, xIm)
-	My := spectrum(yRe, yIm)
-	Mz := spectrum(zRe, zIm)
+	Mx := utils.Spectrum(xRe, xIm)
+	My := utils.Spectrum(yRe, yIm)
+	Mz := utils.Spectrum(zRe, zIm)
 
-	MzHat := mzHatSpectrum(alpha, beta, Mx, My)
+	MzHat := utils.MzHatSpectrum(alpha, beta, Mx, My)
 
 	chart1 := charts.NewLine()
 	utils.SetChartOptions(chart1, "Laboratorium 3", "Zadanie 2 - x(t)", "Czas [s]")

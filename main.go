@@ -5,15 +5,27 @@ import (
 	"universitySignalTransformation/pkg/lab1"
 	"universitySignalTransformation/pkg/lab2"
 	"universitySignalTransformation/pkg/lab3"
+	"universitySignalTransformation/pkg/lab4"
 )
 
 func main() {
+	//Lab1 endpoints
 	http.HandleFunc("/lab1/zad1", lab1.DrawExercise1)
 	http.HandleFunc("/lab1/zad2", lab1.DrawExercise2)
+
+	//Lab2 endpoints
 	http.HandleFunc("/lab2/zad1", lab2.DrawExercise1)
 	http.HandleFunc("/lab2/zad2", lab2.DrawExercise2)
+
+	//Lab3 endpoints
 	http.HandleFunc("/lab3/zad1", lab3.DrawExercise1)
 	http.HandleFunc("/lab3/zad2", lab3.DrawExercise2)
+
+	//Lab4 endpoints
+	http.HandleFunc("/lab4/zad1/Za", lab4.DrawExercise_Za)
+	http.HandleFunc("/lab4/zad1/Zf", lab4.DrawExercise_Zf)
+	http.HandleFunc("/lab4/zad1/Zp", lab4.DrawExercise_Zp)
+
 	err := http.ListenAndServe(":8081", nil)
 	if err != nil {
 		panic(err)
