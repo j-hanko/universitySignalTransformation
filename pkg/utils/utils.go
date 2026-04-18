@@ -1,0 +1,53 @@
+package utils
+
+import (
+	"fmt"
+	"math"
+
+	"github.com/go-echarts/go-echarts/v2/charts"
+	"github.com/go-echarts/go-echarts/v2/opts"
+	"github.com/go-echarts/go-echarts/v2/types"
+)
+
+func timeAxisLabels(Tc, fs float64, step int) []string {
+	N := int(math.Round(Tc * fs))
+	labels := make([]string, 0, N+1)
+
+	for n := 0; n <= N; n++ {
+		if n%step == 0 {
+			t := float64(n) / fs
+			labels = append(labels, fmt.Sprintf("%.2f", t))
+		} else {
+			labels = append(labels, "")
+		}
+	}
+	return labels
+}
+
+func setChartOptions(line *charts.Line, title, subtitle, xAxisName string) {
+	line.SetGlobalOptions(
+		charts.WithInitializationOpts(opts.Initialization{Theme: types.ThemeWonderland}),
+		charts.WithTitleOpts(opts.Title{
+			Title:    title,
+			Subtitle: subtitle,
+		}),
+		charts.WithXAxisOpts(opts.XAxis{
+			Name:         xAxisName,
+			NameLocation: "middle",
+			NameGap:      30,
+			AxisLabel: &opts.AxisLabel{
+				Show:     opts.Bool(true),
+				Interval: "0",
+			},
+		}),
+		charts.WithYAxisOpts(opts.YAxis{
+			Name:         "Amplituda",
+			NameLocation: "middle",
+			NameGap:      50,
+			Position:     "left",
+			AxisLabel: &opts.AxisLabel{
+				Show: opts.Bool(true),
+			},
+		}),
+	)
+}
