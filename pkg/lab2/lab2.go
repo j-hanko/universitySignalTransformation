@@ -128,7 +128,7 @@ func DrawExercise2(w http.ResponseWriter, _ *http.Request) {
 	chart3.SetGlobalOptions(
 		charts.WithInitializationOpts(opts.Initialization{Theme: types.ThemeWonderland}),
 		charts.WithTitleOpts(opts.Title{
-			Title:    "Transmisja danych - instrukcja nr 2",
+			Title:    "Laboratorium 2",
 			Subtitle: "Zadanie 2 dla trzech tonów - skala logarytmiczna",
 		}),
 		charts.WithXAxisOpts(opts.XAxis{
