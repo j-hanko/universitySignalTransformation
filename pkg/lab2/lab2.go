@@ -154,6 +154,6 @@ func DrawExercise2(w http.ResponseWriter, _ *http.Request) {
 		SetSeriesOptions(charts.WithScatterChartOpts(opts.ScatterChart{SymbolSize: 3, Symbol: "circle"}))
 
 	page := components.NewPage()
-	page.AddCharts(chart1)
+	page.AddCharts(chart1, chart2, chart3)
 	page.Render(w)
 }
