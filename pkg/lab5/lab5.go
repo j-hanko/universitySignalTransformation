@@ -1,8 +1,10 @@
 package lab5
 
 import (
+	"fmt"
 	"math"
 	"net/http"
+	"slices"
 	"universitySignalTransformation/pkg/lab4"
 	"universitySignalTransformation/pkg/utils"
 
@@ -26,6 +28,30 @@ func dB_Spectrum(M []float64) []float64 {
 		sliceOfData = append(sliceOfData, M_db)
 	}
 	return sliceOfData
+}
+
+func Bandwidth(x []float64, dB float64) {
+	xRe, xIm := utils.FFT(x)
+	threshold := slices.Max(xIm) - dB
+	var fMin float64 = 0
+	var fMax float64 = 0
+
+	for i := 0; i < len(xIm); i++ {
+		if xIm[i] >= threshold {
+			fMin = xRe[i]
+			break
+		}
+	}
+	for i := len(xIm) - 1; i >= 0; i-- {
+		if xIm[i] >= threshold {
+			fMax = xRe[i]
+			break
+		}
+	}
+
+	returnValue := fMax - fMin
+	fmt.Println(returnValue, fMax, fMin)
+
 }
 
 func DrawExercise_Ma(w http.ResponseWriter, _ *http.Request) {

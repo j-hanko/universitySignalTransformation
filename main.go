@@ -10,6 +10,9 @@ import (
 )
 
 func main() {
+	//Test value for lab5 bandwidth function
+	lab5.Bandwidth(lab4.SignalGenerationExerise1(1.5, 2000, 50, 10, 25.5, "Z_A"), 3)
+
 	//Lab1 endpoints
 	http.HandleFunc("/lab1/zad1", lab1.DrawExercise1)
 	http.HandleFunc("/lab1/zad2", lab1.DrawExercise2)
@@ -36,4 +39,5 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
 }
