@@ -30,28 +30,67 @@ func dB_Spectrum(M []float64) []float64 {
 	return sliceOfData
 }
 
-func Bandwidth(x []float64, dB float64) {
-	xRe, xIm := utils.FFT(x)
-	threshold := slices.Max(xIm) - dB
-	var fMin float64 = 0
-	var fMax float64 = 0
+func bandwidth(x []float64, fs int, dB float64) float64 {
+	re, im := utils.FFT(x)
+	M := utils.Spectrum(re, im)
+	MdB := dB_Spectrum(M)
 
-	for i := 0; i < len(xIm); i++ {
-		if xIm[i] >= threshold {
-			fMin = xRe[i]
+	maxdB := slices.Max(MdB)
+	threshold := maxdB - dB
+
+	N := len(x)
+	half := len(MdB) / 2
+
+	var fMin float64
+	var fMax float64
+
+	for i := 0; i < half; i++ {
+		if MdB[i] >= threshold {
+			fMin = float64(i) * float64(fs) / float64(N)
 			break
 		}
 	}
-	for i := len(xIm) - 1; i >= 0; i-- {
-		if xIm[i] >= threshold {
-			fMax = xRe[i]
+
+	for i := half - 1; i >= 0; i-- {
+		if MdB[i] >= threshold {
+			fMax = float64(i) * float64(fs) / float64(N)
 			break
 		}
 	}
 
-	returnValue := fMax - fMin
-	fmt.Println(returnValue, fMax, fMin)
+	B := fMax - fMin
 
+	return B
+}
+
+func countBandwidthAndWriteToFile(bandwidthTitleName string, data float64, fileName string) {
+	utils.WriteToFile(fmt.Sprintf("%s: %.2f", bandwidthTitleName, data), fileName)
+}
+
+func SaveAllExercise1Data(fileName string, db float64) {
+	Za_a := lab4.SignalGenerationExerise1(Tc, fs, fn, fm, 0.5, "Z_A")
+	Za_b := lab4.SignalGenerationExerise1(Tc, fs, fn, fm, 7.5, "Z_A")
+	Za_c := lab4.SignalGenerationExerise1(Tc, fs, fn, fm, 25.5, "Z_A")
+
+	Zf_a := lab4.SignalGenerationExerise1(Tc, fs, fn, fm, 0.5, "Z_F")
+	Zf_b := lab4.SignalGenerationExerise1(Tc, fs, fn, fm, 2.3, "Z_F")
+	Zf_c := lab4.SignalGenerationExerise1(Tc, fs, fn, fm, 11.3, "Z_F")
+
+	Zp_a := lab4.SignalGenerationExerise1(Tc, fs, fn, fm, 0.5, "Z_P")
+	Zp_b := lab4.SignalGenerationExerise1(Tc, fs, fn, fm, 2.7, "Z_P")
+	Zp_c := lab4.SignalGenerationExerise1(Tc, fs, fn, fm, 9.7, "Z_P")
+
+	countBandwidthAndWriteToFile("Za_a", bandwidth(Za_a, fs, db), fileName)
+	countBandwidthAndWriteToFile("Za_b", bandwidth(Za_b, fs, db), fileName)
+	countBandwidthAndWriteToFile("Za_c", bandwidth(Za_c, fs, db), fileName)
+
+	countBandwidthAndWriteToFile("Zf_a", bandwidth(Zf_a, fs, db), fileName)
+	countBandwidthAndWriteToFile("Zf_b", bandwidth(Zf_b, fs, db), fileName)
+	countBandwidthAndWriteToFile("Zf_c", bandwidth(Zf_c, fs, db), fileName)
+
+	countBandwidthAndWriteToFile("Zp_a", bandwidth(Zp_a, fs, db), fileName)
+	countBandwidthAndWriteToFile("Zp_b", bandwidth(Zp_b, fs, db), fileName)
+	countBandwidthAndWriteToFile("Zp_c", bandwidth(Zp_c, fs, db), fileName)
 }
 
 func DrawExercise_Ma(w http.ResponseWriter, _ *http.Request) {

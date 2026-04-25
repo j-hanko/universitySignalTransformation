@@ -10,9 +10,9 @@ import (
 )
 
 func main() {
-	//Test value for lab5 bandwidth function
-	lab5.Bandwidth(lab4.SignalGenerationExerise1(1.5, 2000, 50, 10, 25.5, "Z_A"), 3)
-
+	lab5.SaveAllExercise1Data("pkg/lab5/test_dla_3.txt", 3)
+	lab5.SaveAllExercise1Data("pkg/lab5/test_dla_6.txt", 6)
+	lab5.SaveAllExercise1Data("pkg/lab5/test_dla_10.txt", 10)
 	//Lab1 endpoints
 	http.HandleFunc("/lab1/zad1", lab1.DrawExercise1)
 	http.HandleFunc("/lab1/zad2", lab1.DrawExercise2)
