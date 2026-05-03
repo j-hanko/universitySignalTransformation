@@ -14,7 +14,7 @@ import (
 )
 
 const (
-	Tc   = 1
+	Tc   = 2
 	fs   = 2000
 	step = 10
 	fn   = 50
