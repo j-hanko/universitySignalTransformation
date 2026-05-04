@@ -1,7 +1,6 @@
 package lab5
 
 import (
-	"fmt"
 	"net/http"
 	"universitySignalTransformation/pkg/lab4"
 	"universitySignalTransformation/pkg/utils"
@@ -19,10 +18,6 @@ const (
 	fm   = 10
 )
 
-func countBandwidthAndWriteToFile(bandwidthTitleName string, data float64, fileName string) {
-	utils.WriteToFile(fmt.Sprintf("%s: %.2f", bandwidthTitleName, data), fileName)
-}
-
 func SaveAllExercise1Data(fileName string, db float64) {
 	Za_a := lab4.SignalGenerationExerise1(Tc, fs, fn, fm, 0.5, "Z_A")
 	Za_b := lab4.SignalGenerationExerise1(Tc, fs, fn, fm, 7.5, "Z_A")
@@ -36,17 +31,17 @@ func SaveAllExercise1Data(fileName string, db float64) {
 	Zp_b := lab4.SignalGenerationExerise1(Tc, fs, fn, fm, 2.7, "Z_P")
 	Zp_c := lab4.SignalGenerationExerise1(Tc, fs, fn, fm, 9.7, "Z_P")
 
-	countBandwidthAndWriteToFile("Za_a", utils.Bandwidth(Za_a, fs, db), fileName)
-	countBandwidthAndWriteToFile("Za_b", utils.Bandwidth(Za_b, fs, db), fileName)
-	countBandwidthAndWriteToFile("Za_c", utils.Bandwidth(Za_c, fs, db), fileName)
+	utils.CountBandwidthAndWriteToFile("Za_a", utils.Bandwidth(Za_a, fs, db), fileName)
+	utils.CountBandwidthAndWriteToFile("Za_b", utils.Bandwidth(Za_b, fs, db), fileName)
+	utils.CountBandwidthAndWriteToFile("Za_c", utils.Bandwidth(Za_c, fs, db), fileName)
 
-	countBandwidthAndWriteToFile("Zf_a", utils.Bandwidth(Zf_a, fs, db), fileName)
-	countBandwidthAndWriteToFile("Zf_b", utils.Bandwidth(Zf_b, fs, db), fileName)
-	countBandwidthAndWriteToFile("Zf_c", utils.Bandwidth(Zf_c, fs, db), fileName)
+	utils.CountBandwidthAndWriteToFile("Zf_a", utils.Bandwidth(Zf_a, fs, db), fileName)
+	utils.CountBandwidthAndWriteToFile("Zf_b", utils.Bandwidth(Zf_b, fs, db), fileName)
+	utils.CountBandwidthAndWriteToFile("Zf_c", utils.Bandwidth(Zf_c, fs, db), fileName)
 
-	countBandwidthAndWriteToFile("Zp_a", utils.Bandwidth(Zp_a, fs, db), fileName)
-	countBandwidthAndWriteToFile("Zp_b", utils.Bandwidth(Zp_b, fs, db), fileName)
-	countBandwidthAndWriteToFile("Zp_c", utils.Bandwidth(Zp_c, fs, db), fileName)
+	utils.CountBandwidthAndWriteToFile("Zp_a", utils.Bandwidth(Zp_a, fs, db), fileName)
+	utils.CountBandwidthAndWriteToFile("Zp_b", utils.Bandwidth(Zp_b, fs, db), fileName)
+	utils.CountBandwidthAndWriteToFile("Zp_c", utils.Bandwidth(Zp_c, fs, db), fileName)
 }
 
 func DrawExercise_Ma(w http.ResponseWriter, _ *http.Request) {

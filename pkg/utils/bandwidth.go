@@ -1,6 +1,9 @@
 package utils
 
-import "math"
+import (
+	"fmt"
+	"math"
+)
 
 func Bandwidth(x []float64, fs int, dB float64) float64 {
 	re, im := FFT(x)
@@ -35,5 +38,9 @@ func Bandwidth(x []float64, fs int, dB float64) float64 {
 	}
 
 	B := float64(last-first) * df
-	return math.Floor(B + 0.5)
+	return B
+}
+
+func CountBandwidthAndWriteToFile(bandwidthTitleName string, data float64, fileName string) {
+	WriteToFile(fmt.Sprintf("%s: %.2f", bandwidthTitleName, data), fileName)
 }

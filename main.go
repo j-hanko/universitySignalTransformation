@@ -8,12 +8,20 @@ import (
 	"universitySignalTransformation/pkg/lab4"
 	"universitySignalTransformation/pkg/lab5"
 	"universitySignalTransformation/pkg/lab6"
+	"universitySignalTransformation/pkg/lab7"
 )
 
 func main() {
-	lab5.SaveAllExercise1Data("pkg/lab5/test_dla_3.txt", 3)
-	lab5.SaveAllExercise1Data("pkg/lab5/test_dla_6.txt", 6)
-	lab5.SaveAllExercise1Data("pkg/lab5/test_dla_10.txt", 10)
+	/*
+		lab5.SaveAllExercise1Data("pkg/lab5/test_dla_3.txt", 3)
+		lab5.SaveAllExercise1Data("pkg/lab5/test_dla_6.txt", 6)
+		lab5.SaveAllExercise1Data("pkg/lab5/test_dla_10.txt", 10)
+	*/
+
+	lab7.SaveAllExercise1Data("pkg/lab7/test_dla_3.txt", 3)
+	lab7.SaveAllExercise1Data("pkg/lab7/test_dla_6.txt", 6)
+	lab7.SaveAllExercise1Data("pkg/lab7/test_dla_10.txt", 10)
+
 	//Lab1 endpoints
 	http.HandleFunc("/lab1/zad1", lab1.DrawExercise1)
 	http.HandleFunc("/lab1/zad2", lab1.DrawExercise2)

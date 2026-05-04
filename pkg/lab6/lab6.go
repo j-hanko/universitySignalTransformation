@@ -25,13 +25,13 @@ func SignalGenerationExercise(bits []int, formula string) []float64 {
 	fn := W / Tb
 	fn1 := (W + 1) / Tb
 	fn2 := (W + 2) / Tb
-	fs := 1000 * fn
+	fs := int(1000 * fn)
 
-	N := int(math.Round(Tc * fs))
+	N := int(math.Round(Tc * float64(fs)))
 	sliceOfData := make([]float64, 0)
 
 	for n := 0; n < N; n++ {
-		t := float64(n) / fs
+		t := float64(n) / float64(fs)
 		bitIndex := int(math.Floor(t / Tb))
 		if bitIndex >= B {
 			bitIndex = B - 1
