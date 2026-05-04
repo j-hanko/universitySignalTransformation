@@ -23,3 +23,17 @@ func MzHatSpectrum(alpha, beta float64, Mx, My []float64) []float64 {
 	}
 	return sliceOfData
 }
+
+func DB_Spectrum(M []float64) []float64 {
+	sliceOfData := make([]float64, 0, len(M))
+	for i := 0; i < len(M); i++ {
+		var M_db float64
+		if M[i] <= 0 {
+			M_db = -math.MaxFloat64
+		} else {
+			M_db = 20 * math.Log10(M[i])
+		}
+		sliceOfData = append(sliceOfData, M_db)
+	}
+	return sliceOfData
+}

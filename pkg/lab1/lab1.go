@@ -25,7 +25,7 @@ const (
 func signalGenerationExerise1(Tc, f, fs, phi float64, formula string) []float64 {
 	N := int(math.Round(Tc * fs))
 	sliceOfData := make([]float64, 0)
-	for n := 0; n <= N; n++ {
+	for n := 0; n < N; n++ {
 		t := float64(n) / fs
 		x := 0.9*math.Sin(2*math.Pi*f*t+phi)*math.Cos(21*math.Pi*t) + (t - 0.66*t)
 		y := (math.Pow(t, 3) - 1) + math.Cos(4*math.Pow(t, 2)*math.Pi)*t
@@ -52,7 +52,7 @@ func signalGenerationExerise1(Tc, f, fs, phi float64, formula string) []float64 
 func signalGenerationExerise2(Tc, fs, h float64, formula string) []float64 {
 	N := int(math.Round(Tc * fs))
 	sliceOfData := make([]float64, 0)
-	for n := 0; n <= N; n++ {
+	for n := 0; n < N; n++ {
 		t := float64(n) / fs
 		if formula == "u" {
 			if t >= 0 && t < 0.3 {

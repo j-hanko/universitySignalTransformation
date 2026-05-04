@@ -23,25 +23,25 @@ func SignalGenerationExerise1(Tc, fs, fn, fm, useCase float64, formula string) [
 	N := int(math.Round(Tc * fs))
 	sliceOfData := make([]float64, 0)
 	if formula == "M" {
-		for n := 0; n <= N; n++ {
+		for n := 0; n < N; n++ {
 			t := float64(n) / fs
 			m := math.Sin(float64(2) * math.Pi * fm * t)
 			sliceOfData = append(sliceOfData, m)
 		}
 	} else if formula == "Z_A" {
-		for n := 0; n <= N; n++ {
+		for n := 0; n < N; n++ {
 			t := float64(n) / fs
 			z_a := useCase * math.Sin(float64(2)*math.Pi*fm*t) * math.Cos(float64(2)*math.Pi*fn*t)
 			sliceOfData = append(sliceOfData, z_a)
 		}
 	} else if formula == "Z_P" {
-		for n := 0; n <= N; n++ {
+		for n := 0; n < N; n++ {
 			t := float64(n) / fs
 			z_p := math.Cos(float64(2)*math.Pi*fn*t + useCase*math.Sin(float64(2)*math.Pi*fm*t))
 			sliceOfData = append(sliceOfData, z_p)
 		}
 	} else if formula == "Z_F" {
-		for n := 0; n <= N; n++ {
+		for n := 0; n < N; n++ {
 			t := float64(n) / fs
 			z_f := math.Cos(float64(2)*math.Pi*fn*t + useCase/fm*math.Sin(float64(2)*math.Pi*fm*t))
 			sliceOfData = append(sliceOfData, z_f)

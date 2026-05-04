@@ -3,7 +3,6 @@ package lab6
 import (
 	"math"
 	"net/http"
-	"universitySignalTransformation/pkg/lab5"
 	"universitySignalTransformation/pkg/utils"
 
 	"github.com/go-echarts/go-echarts/v2/charts"
@@ -31,7 +30,7 @@ func SignalGenerationExercise(bits []int, formula string) []float64 {
 	N := int(math.Round(Tc * fs))
 	sliceOfData := make([]float64, 0)
 
-	for n := 0; n <= N; n++ {
+	for n := 0; n < N; n++ {
 		t := float64(n) / fs
 		bitIndex := int(math.Floor(t / Tb))
 		if bitIndex >= B {
@@ -127,9 +126,9 @@ func DrawExercise2(w http.ResponseWriter, _ *http.Request) {
 	FSK_Re, FSK_Im := utils.FFT(FSK)
 	PSK_Re, PSK_Im := utils.FFT(PSK)
 
-	Ma := lab5.DB_Spectrum(utils.Spectrum(ASK_Re, ASK_Im))
-	Mp := lab5.DB_Spectrum(utils.Spectrum(PSK_Re, PSK_Im))
-	Mf := lab5.DB_Spectrum(utils.Spectrum(FSK_Re, FSK_Im))
+	Ma := utils.DB_Spectrum(utils.Spectrum(ASK_Re, ASK_Im))
+	Mp := utils.DB_Spectrum(utils.Spectrum(PSK_Re, PSK_Im))
+	Mf := utils.DB_Spectrum(utils.Spectrum(FSK_Re, FSK_Im))
 
 	chart1 := charts.NewLine()
 	utils.SetSpectrumChartOptions(chart1, "Laboratorium 6", "Zadanie 2")
