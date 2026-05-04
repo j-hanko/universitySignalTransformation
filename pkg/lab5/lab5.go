@@ -21,7 +21,7 @@ const (
 	fm   = 10
 )
 
-func dB_Spectrum(M []float64) []float64 {
+func DB_Spectrum(M []float64) []float64 {
 	sliceOfData := make([]float64, 0, len(M))
 	for i := 0; i < len(M); i++ {
 		M_db := 20 * math.Log10(M[i])
@@ -33,7 +33,7 @@ func dB_Spectrum(M []float64) []float64 {
 func bandwidth(x []float64, fs int, dB float64) float64 {
 	re, im := utils.FFT(x)
 	M := utils.Spectrum(re, im)
-	MdB := dB_Spectrum(M)
+	MdB := DB_Spectrum(M)
 
 	maxdB := slices.Max(MdB)
 	threshold := maxdB - dB
@@ -102,9 +102,9 @@ func DrawExercise_Ma(w http.ResponseWriter, _ *http.Request) {
 	bRe, bIm := utils.FFT(Za_b)
 	cRe, cIm := utils.FFT(Za_c)
 
-	Ma_a := dB_Spectrum(utils.Spectrum(aRe, aIm))
-	Ma_b := dB_Spectrum(utils.Spectrum(bRe, bIm))
-	Ma_c := dB_Spectrum(utils.Spectrum(cRe, cIm))
+	Ma_a := DB_Spectrum(utils.Spectrum(aRe, aIm))
+	Ma_b := DB_Spectrum(utils.Spectrum(bRe, bIm))
+	Ma_c := DB_Spectrum(utils.Spectrum(cRe, cIm))
 
 	chart1 := charts.NewLine()
 	utils.SetSpectrumChartOptions(chart1, "Laboratorium 5", "Zadanie 1 widmo amplitudowe dla Z_a z wartością k = 0.5")
@@ -144,9 +144,9 @@ func DrawExercise_Mf(w http.ResponseWriter, _ *http.Request) {
 	bRe, bIm := utils.FFT(Zf_b)
 	cRe, cIm := utils.FFT(Zf_c)
 
-	Mf_a := dB_Spectrum(utils.Spectrum(aRe, aIm))
-	Mf_b := dB_Spectrum(utils.Spectrum(bRe, bIm))
-	Mf_c := dB_Spectrum(utils.Spectrum(cRe, cIm))
+	Mf_a := DB_Spectrum(utils.Spectrum(aRe, aIm))
+	Mf_b := DB_Spectrum(utils.Spectrum(bRe, bIm))
+	Mf_c := DB_Spectrum(utils.Spectrum(cRe, cIm))
 
 	chart1 := charts.NewLine()
 	utils.SetSpectrumChartOptions(chart1, "Laboratorium 5", "Zadanie 1 widmo amplitudowe dla Z_f z wartością k = 0.5")
@@ -186,9 +186,9 @@ func DrawExercise_Mp(w http.ResponseWriter, _ *http.Request) {
 	bRe, bIm := utils.DFT(Zp_b)
 	cRe, cIm := utils.DFT(Zp_c)
 
-	Mp_a := dB_Spectrum(utils.Spectrum(aRe, aIm))
-	Mp_b := dB_Spectrum(utils.Spectrum(bRe, bIm))
-	Mp_c := dB_Spectrum(utils.Spectrum(cRe, cIm))
+	Mp_a := DB_Spectrum(utils.Spectrum(aRe, aIm))
+	Mp_b := DB_Spectrum(utils.Spectrum(bRe, bIm))
+	Mp_c := DB_Spectrum(utils.Spectrum(cRe, cIm))
 
 	chart1 := charts.NewLine()
 	utils.SetSpectrumChartOptions(chart1, "Laboratorium 5", "Zadanie 1 widmo amplitudowe dla Z_p z wartością k = 0.5")

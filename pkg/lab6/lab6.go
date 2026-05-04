@@ -3,6 +3,7 @@ package lab6
 import (
 	"math"
 	"net/http"
+	"universitySignalTransformation/pkg/lab5"
 	"universitySignalTransformation/pkg/utils"
 
 	"github.com/go-echarts/go-echarts/v2/charts"
@@ -18,7 +19,7 @@ const (
 	Tc   = 1
 )
 
-func SignalGenerationExerise(bits []int, formula string) []float64 {
+func SignalGenerationExercise(bits []int, formula string) []float64 {
 	B := len(bits)
 	Tb := Tc / float64(B)
 
@@ -62,15 +63,15 @@ func SignalGenerationExerise(bits []int, formula string) []float64 {
 	return sliceOfData
 }
 
-func DrawExercise(w http.ResponseWriter, _ *http.Request) {
+func DrawExercise1(w http.ResponseWriter, _ *http.Request) {
 	bits := utils.ASCII_to_bit("KOSIARKA")
 
 	//Limit bytes to 10 chars
 	bits = bits[:10]
 
-	ASK := SignalGenerationExerise(bits, "ASK")
-	FSK := SignalGenerationExerise(bits, "FSK")
-	PSK := SignalGenerationExerise(bits, "PSK")
+	ASK := SignalGenerationExercise(bits, "ASK")
+	FSK := SignalGenerationExercise(bits, "FSK")
+	PSK := SignalGenerationExercise(bits, "PSK")
 
 	B := len(bits)
 	Tb := Tc / float64(B)
@@ -78,30 +79,82 @@ func DrawExercise(w http.ResponseWriter, _ *http.Request) {
 	fs := 1000 * fn
 
 	chart1 := charts.NewLine()
-
-	utils.SetChartOptions(chart1, "Laboratorium 6", "Część 1 - ASK, zA(t)", "Czas [s]")
+	utils.SetChartOptions(chart1, "Laboratorium 6", "Zadanie 1", "Czas [s]")
 	chart1.SetXAxis(utils.TimeAxisLabels(Tc, fs, step)).
-		AddSeries("ASK - zA(t)", utils.FromSliceToLineData(ASK)).
+		AddSeries("ASK", utils.FromSliceToLineData(ASK)).
 		SetSeriesOptions(charts.WithLineChartOpts(opts.LineChart{
 			Smooth:     opts.Bool(false),
 			ShowSymbol: opts.Bool(false),
 		}))
+
 	chart2 := charts.NewLine()
-	utils.SetChartOptions(chart2, "Laboratorium 6", "Część 1 - PSK, zP(t)", "Czas [s]")
+	utils.SetChartOptions(chart2, "Laboratorium 6", "Zadanie 1", "Czas [s]")
 	chart2.SetXAxis(utils.TimeAxisLabels(Tc, fs, step)).
-		AddSeries("PSK - zP(t)", utils.FromSliceToLineData(PSK)).
+		AddSeries("PSK", utils.FromSliceToLineData(PSK)).
 		SetSeriesOptions(charts.WithLineChartOpts(opts.LineChart{
 			Smooth:     opts.Bool(false),
 			ShowSymbol: opts.Bool(false),
 		}))
+
 	chart3 := charts.NewLine()
-	utils.SetChartOptions(chart3, "Laboratorium 6", "Część 1 - FSK, zF(t)", "Czas [s]")
+	utils.SetChartOptions(chart3, "Laboratorium 6", "Zadanie 1", "Czas [s]")
 	chart3.SetXAxis(utils.TimeAxisLabels(Tc, fs, step)).
-		AddSeries("FSK - zF(t)", utils.FromSliceToLineData(FSK)).
+		AddSeries("FSK", utils.FromSliceToLineData(FSK)).
 		SetSeriesOptions(charts.WithLineChartOpts(opts.LineChart{
 			Smooth:     opts.Bool(false),
 			ShowSymbol: opts.Bool(false),
 		}))
+
+	page := components.NewPage()
+	page.AddCharts(chart1, chart2, chart3)
+	page.Render(w)
+}
+
+func DrawExercise2(w http.ResponseWriter, _ *http.Request) {
+	step := 10
+	bits := utils.ASCII_to_bit("KOSIARKA")
+
+	ASK := SignalGenerationExercise(bits, "ASK")
+	FSK := SignalGenerationExercise(bits, "FSK")
+	PSK := SignalGenerationExercise(bits, "PSK")
+
+	B := len(bits)
+	Tb := Tc / float64(B)
+	fn := W / Tb
+	fs := 1000 * fn
+
+	ASK_Re, ASK_Im := utils.FFT(ASK)
+	FSK_Re, FSK_Im := utils.FFT(FSK)
+	PSK_Re, PSK_Im := utils.FFT(PSK)
+
+	Ma := lab5.DB_Spectrum(utils.Spectrum(ASK_Re, ASK_Im))
+	Mp := lab5.DB_Spectrum(utils.Spectrum(PSK_Re, PSK_Im))
+	Mf := lab5.DB_Spectrum(utils.Spectrum(FSK_Re, FSK_Im))
+
+	chart1 := charts.NewLine()
+	utils.SetSpectrumChartOptions(chart1, "Laboratorium 6", "Zadanie 2")
+	chart1.SetXAxis(utils.FrequencyAxisLabels(Tc, fs, step)).
+		AddSeries("Ma", utils.FromSliceToLineData(Ma)).
+		SetSeriesOptions(
+			charts.WithLineChartOpts(opts.LineChart{Smooth: opts.Bool(false), ShowSymbol: opts.Bool(false)}),
+			charts.WithLineStyleOpts(opts.LineStyle{Width: 1}))
+
+	chart2 := charts.NewLine()
+	utils.SetSpectrumChartOptions(chart2, "Laboratorium 6", "Zadanie 2")
+	chart2.SetXAxis(utils.FrequencyAxisLabels(Tc, fs, step)).
+		AddSeries("Mp", utils.FromSliceToLineData(Mp)).
+		SetSeriesOptions(
+			charts.WithLineChartOpts(opts.LineChart{Smooth: opts.Bool(false), ShowSymbol: opts.Bool(false)}),
+			charts.WithLineStyleOpts(opts.LineStyle{Width: 1}))
+
+	chart3 := charts.NewLine()
+	utils.SetSpectrumChartOptions(chart3, "Laboratorium 6", "Zadanie 2")
+	chart3.SetXAxis(utils.FrequencyAxisLabels(Tc, fs, step)).
+		AddSeries("Mf", utils.FromSliceToLineData(Mf)).
+		SetSeriesOptions(
+			charts.WithLineChartOpts(opts.LineChart{Smooth: opts.Bool(false), ShowSymbol: opts.Bool(false)}),
+			charts.WithLineStyleOpts(opts.LineStyle{Width: 1}))
+
 	page := components.NewPage()
 	page.AddCharts(chart1, chart2, chart3)
 	page.Render(w)

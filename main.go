@@ -37,7 +37,8 @@ func main() {
 	http.HandleFunc("/lab5/zad1/Mp", lab5.DrawExercise_Mp)
 
 	//Lab6 endpoints
-	http.HandleFunc("/lab6/zad1", lab6.DrawExercise)
+	http.HandleFunc("/lab6/zad1", lab6.DrawExercise1)
+	http.HandleFunc("/lab6/zad2", lab6.DrawExercise2)
 	err := http.ListenAndServe(":8081", nil)
 	if err != nil {
 		panic(err)
