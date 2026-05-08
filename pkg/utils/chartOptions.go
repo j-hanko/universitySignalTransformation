@@ -93,7 +93,7 @@ func SetSpectrumChartOptions(line *charts.Line, title, subtitle string) {
 			NameLocation: "middle",
 			NameGap:      30,
 			Min:          0,
-			Max:          150,
+			Max:          300,
 			AxisLabel: &opts.AxisLabel{
 				Show:     opts.Bool(true),
 				Interval: "0",
@@ -104,7 +104,7 @@ func SetSpectrumChartOptions(line *charts.Line, title, subtitle string) {
 			NameLocation: "middle",
 			NameGap:      50,
 			Position:     "left",
-			Min:          -80,
+			Min:          -150,
 			Max:          30,
 			AxisLabel: &opts.AxisLabel{
 				Show: opts.Bool(true),

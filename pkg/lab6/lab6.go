@@ -110,7 +110,7 @@ func DrawExercise1(w http.ResponseWriter, _ *http.Request) {
 }
 
 func DrawExercise2(w http.ResponseWriter, _ *http.Request) {
-	step := 10
+	step := 30
 	bits := utils.ASCII_to_bit("KOSIARKA")
 
 	ASK := SignalGenerationExercise(bits, "ASK")
