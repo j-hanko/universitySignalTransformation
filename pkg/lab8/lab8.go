@@ -12,13 +12,13 @@ import (
 )
 
 const (
-	step = 10000
+	step = 2500
 	A    = 1
 	W    = 2
 	Tc   = 1
 )
 
-func Demodulator(ASCII_word, signal_choose string) ([]float64, []float64, []float64, []float64) {
+func Demodulator(ASCII_word, signal_choose string) ([]float64, []float64, []float64, []float64, []int) {
 	bits := utils.ASCII_to_bit(ASCII_word)
 	B := len(bits)
 	Tb := Tc / float64(B)
@@ -61,7 +61,9 @@ func Demodulator(ASCII_word, signal_choose string) ([]float64, []float64, []floa
 		}
 	}
 
-	return z, slice_x, slice_p, slice_c
+	decodedBits := utils.SignalToBits(slice_c, samplesPerBit)
+
+	return z, slice_x, slice_p, slice_c, decodedBits
 }
 
 func DrawDemodulator(w http.ResponseWriter, r *http.Request) {
@@ -76,7 +78,7 @@ func DrawDemodulator(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Niepoprawny signal. Użyj ?signal=ASK albo ?signal=PSK", http.StatusBadRequest)
 		return
 	}
-	img1, img2, img3, img4 := Demodulator(ASCII_word, signalChoose)
+	img1, img2, img3, img4, _ := Demodulator(ASCII_word, signalChoose)
 
 	bits := utils.ASCII_to_bit(ASCII_word)
 	B := len(bits)
