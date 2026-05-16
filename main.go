@@ -9,6 +9,7 @@ import (
 	"universitySignalTransformation/pkg/lab5"
 	"universitySignalTransformation/pkg/lab6"
 	"universitySignalTransformation/pkg/lab8"
+	"universitySignalTransformation/pkg/lab9"
 )
 
 func main() {
@@ -51,6 +52,9 @@ func main() {
 
 	//Lab8 endpoints
 	http.HandleFunc("/lab8/zad1", lab8.DrawDemodulator)
+
+	//Lab9 endpoints
+	http.HandleFunc("/lab9/zad1", lab9.DrawDemodulator)
 
 	err := http.ListenAndServe(":8081", nil)
 	if err != nil {
