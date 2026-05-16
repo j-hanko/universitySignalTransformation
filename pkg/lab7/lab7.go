@@ -7,6 +7,7 @@ import (
 )
 
 const (
+	A  = 1
 	W  = 2
 	Tc = 1
 )
