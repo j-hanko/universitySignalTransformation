@@ -22,10 +22,9 @@ func Demodulator(ASCII_word string) ([]float64, []float64, []float64, []float64,
 	bits := utils.ASCII_to_bit(ASCII_word)
 	B := len(bits)
 	Tb := Tc / float64(B)
-	fn := W / Tb
 	fn1 := (W + 1) / Tb
 	fn2 := (W + 2) / Tb
-	fs := int(1000 * fn)
+	fs := int(1000 * fn2)
 
 	slice_x1 := make([]float64, 0)
 	slice_x2 := make([]float64, 0)
@@ -88,10 +87,8 @@ func DrawDemodulator(w http.ResponseWriter, r *http.Request) {
 	bits := utils.ASCII_to_bit(ASCII_word)
 	B := len(bits)
 	Tb := Tc / float64(B)
-	fn := W / Tb
-	//fn1 := (W + 1) / Tb
-	//fn2 := (W + 2) / Tb
-	fs := 1000 * fn
+	fn2 := (W + 2) / Tb
+	fs := 1000 * fn2
 
 	chart1 := charts.NewLine()
 	utils.SetChartOptions(chart1, "Laboratorium 9", "Zadanie 1", "Czas [s]")
