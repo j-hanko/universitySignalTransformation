@@ -18,7 +18,7 @@ const (
 	Tc   = 1
 )
 
-func Demodulator(ASCII_word string) ([]float64, []float64, []float64, []float64, []float64, []float64, []float64) {
+func Demodulator(ASCII_word string) ([]float64, []float64, []float64, []float64, []float64, []float64, []float64, []int) {
 	bits := utils.ASCII_to_bit(ASCII_word)
 	B := len(bits)
 	Tb := Tc / float64(B)
@@ -63,6 +63,10 @@ func Demodulator(ASCII_word string) ([]float64, []float64, []float64, []float64,
 		slice_p2 = append(slice_p2, sum2)
 	}
 
+	for i := 0; i < len(slice_p1); i++ {
+		slice_p = append(slice_p, slice_p2[i]-slice_p1[i])
+	}
+
 	for i := 0; i < len(slice_p); i++ {
 		if slice_p[i] > 0 {
 			slice_c = append(slice_c, 1)
@@ -71,17 +75,15 @@ func Demodulator(ASCII_word string) ([]float64, []float64, []float64, []float64,
 		}
 	}
 
-	for i := 0; i < len(slice_p1); i++ {
-		slice_p = append(slice_p, slice_p1[i]+slice_p2[i])
-	}
+	decodedBits := utils.SignalToBits(slice_c, samplesPerBit)
 
-	return z, slice_x1, slice_x2, slice_p1, slice_p2, slice_p, slice_c
+	return z, slice_x1, slice_x2, slice_p1, slice_p2, slice_p, slice_c, decodedBits
 }
 
 func DrawDemodulator(w http.ResponseWriter, r *http.Request) {
 	ASCII_word := "bot"
 
-	img1, img2, img3, img4, img5, img6, img7 := Demodulator(ASCII_word)
+	img1, img2, img3, img4, img5, img6, img7, _ := Demodulator(ASCII_word)
 
 	bits := utils.ASCII_to_bit(ASCII_word)
 	B := len(bits)

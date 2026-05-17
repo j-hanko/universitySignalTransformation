@@ -19,6 +19,11 @@ const (
 )
 
 func Demodulator(ASCII_word, signal_choose string) ([]float64, []float64, []float64, []float64, []int) {
+
+	if signal_choose != "ASK" && signal_choose != "PSK" {
+		panic("You can choose only ASK or PSK signal")
+	}
+
 	bits := utils.ASCII_to_bit(ASCII_word)
 	B := len(bits)
 	Tb := Tc / float64(B)
@@ -30,10 +35,9 @@ func Demodulator(ASCII_word, signal_choose string) ([]float64, []float64, []floa
 	slice_c := make([]float64, 0)
 
 	phase := 0.0
-	h := 750.0
+	h := 0.0
 	if signal_choose == "PSK" {
 		phase = math.Pi
-		h = 0
 	}
 
 	z := lab6.SignalGenerationExercise(bits, signal_choose)
@@ -51,6 +55,16 @@ func Demodulator(ASCII_word, signal_choose string) ([]float64, []float64, []floa
 		}
 		sum += slice_x[i]
 		slice_p = append(slice_p, sum)
+	}
+
+	if signal_choose == "ASK" {
+		maxP := 0.0
+		for _, v := range slice_p {
+			if v > maxP {
+				maxP = v
+			}
+		}
+		h = maxP / 2
 	}
 
 	for i := 0; i < len(slice_p); i++ {
