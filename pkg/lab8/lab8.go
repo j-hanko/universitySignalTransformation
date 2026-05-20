@@ -33,6 +33,7 @@ func Demodulator(ASCII_word, signal_choose string) ([]float64, []float64, []floa
 	slice_x := make([]float64, 0)
 	slice_p := make([]float64, 0)
 	slice_c := make([]float64, 0)
+	decodedBits := make([]int, 0)
 
 	phase := 0.0
 	h := 0.0
@@ -67,15 +68,33 @@ func Demodulator(ASCII_word, signal_choose string) ([]float64, []float64, []floa
 		h = maxP / 2
 	}
 
-	for i := 0; i < len(slice_p); i++ {
-		if slice_p[i] > h {
-			slice_c = append(slice_c, 1)
+	for bit := 0; bit < B; bit++ {
+		start := bit * samplesPerBit
+		end := (bit + 1) * samplesPerBit
+
+		if end > len(slice_p) {
+			end = len(slice_p)
+		}
+
+		decisionIndex := end - 1
+
+		var decision float64
+		var bitValue int
+
+		if slice_p[decisionIndex] > h {
+			decision = 1.0
+			bitValue = 1
 		} else {
-			slice_c = append(slice_c, 0)
+			decision = 0.0
+			bitValue = 0
+		}
+
+		decodedBits = append(decodedBits, bitValue)
+
+		for i := start; i < end; i++ {
+			slice_c = append(slice_c, decision)
 		}
 	}
-
-	decodedBits := utils.SignalToBits(slice_c, samplesPerBit)
 
 	return z, slice_x, slice_p, slice_c, decodedBits
 }

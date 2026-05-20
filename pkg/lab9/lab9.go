@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	step = 2500
+	step = 5000
 	A    = 1
 	W    = 2
 	Tc   = 1
@@ -32,6 +32,7 @@ func Demodulator(ASCII_word string) ([]float64, []float64, []float64, []float64,
 	slice_p2 := make([]float64, 0)
 	slice_p := make([]float64, 0)
 	slice_c := make([]float64, 0)
+	decodedBits := make([]int, 0)
 
 	z := lab6.SignalGenerationExercise(bits, "FSK")
 	for n := 0; n < len(z); n++ {
@@ -42,7 +43,7 @@ func Demodulator(ASCII_word string) ([]float64, []float64, []float64, []float64,
 		slice_x2 = append(slice_x2, x2)
 	}
 
-	samplesPerBit := int(float64(fs) * Tb)
+	samplesPerBit := len(z) / B
 	sum1 := 0.0
 	sum2 := 0.0
 
@@ -66,15 +67,35 @@ func Demodulator(ASCII_word string) ([]float64, []float64, []float64, []float64,
 		slice_p = append(slice_p, slice_p2[i]-slice_p1[i])
 	}
 
-	for i := 0; i < len(slice_p); i++ {
-		if slice_p[i] > 0 {
-			slice_c = append(slice_c, 1)
+	slice_c = make([]float64, len(slice_p))
+
+	for bit := 0; bit < B; bit++ {
+		start := bit * samplesPerBit
+		end := (bit + 1) * samplesPerBit
+
+		if end > len(slice_p) {
+			end = len(slice_p)
+		}
+
+		decisionIndex := end - 1
+
+		var decision float64
+		var bitValue int
+
+		if slice_p[decisionIndex] > 0 {
+			decision = 1.0
+			bitValue = 1
 		} else {
-			slice_c = append(slice_c, 0)
+			decision = 0.0
+			bitValue = 0
+		}
+
+		decodedBits = append(decodedBits, bitValue)
+
+		for i := start; i < end; i++ {
+			slice_c[i] = decision
 		}
 	}
-
-	decodedBits := utils.SignalToBits(slice_c, samplesPerBit)
 
 	return z, slice_x1, slice_x2, slice_p1, slice_p2, slice_p, slice_c, decodedBits
 }
@@ -89,10 +110,11 @@ func DrawDemodulator(w http.ResponseWriter, r *http.Request) {
 	Tb := Tc / float64(B)
 	fn2 := (W + 2) / Tb
 	fs := 1000 * fn2
+	realTc := float64(len(img1)) / float64(fs)
 
 	chart1 := charts.NewLine()
 	utils.SetChartOptions(chart1, "Laboratorium 9", "Zadanie 1", "Czas [s]")
-	chart1.SetXAxis(utils.TimeAxisLabels(Tc, fs, step)).
+	chart1.SetXAxis(utils.TimeAxisLabels(realTc, fs, step)).
 		AddSeries("z(t)", utils.FromSliceToLineData(img1)).
 		SetSeriesOptions(charts.WithLineChartOpts(opts.LineChart{
 			Smooth:     opts.Bool(false),
@@ -101,7 +123,7 @@ func DrawDemodulator(w http.ResponseWriter, r *http.Request) {
 
 	chart2 := charts.NewLine()
 	utils.SetChartOptions(chart2, "Laboratorium 9", "Zadanie 1", "Czas [s]")
-	chart2.SetXAxis(utils.TimeAxisLabels(Tc, fs, step)).
+	chart2.SetXAxis(utils.TimeAxisLabels(realTc, fs, step)).
 		AddSeries("x1(t)", utils.FromSliceToLineData(img2)).
 		SetSeriesOptions(charts.WithLineChartOpts(opts.LineChart{
 			Smooth:     opts.Bool(false),
@@ -110,7 +132,7 @@ func DrawDemodulator(w http.ResponseWriter, r *http.Request) {
 
 	chart3 := charts.NewLine()
 	utils.SetChartOptions(chart3, "Laboratorium 9", "Zadanie 1", "Czas [s]")
-	chart3.SetXAxis(utils.TimeAxisLabels(Tc, fs, step)).
+	chart3.SetXAxis(utils.TimeAxisLabels(realTc, fs, step)).
 		AddSeries("x2(t)", utils.FromSliceToLineData(img3)).
 		SetSeriesOptions(charts.WithLineChartOpts(opts.LineChart{
 			Smooth:     opts.Bool(false),
@@ -119,7 +141,7 @@ func DrawDemodulator(w http.ResponseWriter, r *http.Request) {
 
 	chart4 := charts.NewLine()
 	utils.SetChartOptions(chart4, "Laboratorium 9", "Zadanie 1", "Czas [s]")
-	chart4.SetXAxis(utils.TimeAxisLabels(Tc, fs, step)).
+	chart4.SetXAxis(utils.TimeAxisLabels(realTc, fs, step)).
 		AddSeries("p1(t)", utils.FromSliceToLineData(img4)).
 		SetSeriesOptions(charts.WithLineChartOpts(opts.LineChart{
 			Smooth:     opts.Bool(false),
@@ -128,7 +150,7 @@ func DrawDemodulator(w http.ResponseWriter, r *http.Request) {
 
 	chart5 := charts.NewLine()
 	utils.SetChartOptions(chart5, "Laboratorium 9", "Zadanie 1", "Czas [s]")
-	chart5.SetXAxis(utils.TimeAxisLabels(Tc, fs, step)).
+	chart5.SetXAxis(utils.TimeAxisLabels(realTc, fs, step)).
 		AddSeries("p2(t)", utils.FromSliceToLineData(img5)).
 		SetSeriesOptions(charts.WithLineChartOpts(opts.LineChart{
 			Smooth:     opts.Bool(false),
@@ -137,7 +159,7 @@ func DrawDemodulator(w http.ResponseWriter, r *http.Request) {
 
 	chart6 := charts.NewLine()
 	utils.SetChartOptions(chart6, "Laboratorium 9", "Zadanie 1", "Czas [s]")
-	chart6.SetXAxis(utils.TimeAxisLabels(Tc, fs, step)).
+	chart6.SetXAxis(utils.TimeAxisLabels(realTc, fs, step)).
 		AddSeries("p(t)", utils.FromSliceToLineData(img6)).
 		SetSeriesOptions(charts.WithLineChartOpts(opts.LineChart{
 			Smooth:     opts.Bool(false),
@@ -146,7 +168,7 @@ func DrawDemodulator(w http.ResponseWriter, r *http.Request) {
 
 	chart7 := charts.NewLine()
 	utils.SetChartOptions(chart7, "Laboratorium 9", "Zadanie 1", "Czas [s]")
-	chart7.SetXAxis(utils.TimeAxisLabels(Tc, fs, step)).
+	chart7.SetXAxis(utils.TimeAxisLabels(realTc, fs, step)).
 		AddSeries("c(t)", utils.FromSliceToLineData(img7)).
 		SetSeriesOptions(charts.WithLineChartOpts(opts.LineChart{
 			Smooth:     opts.Bool(false),
