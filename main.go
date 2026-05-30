@@ -1,8 +1,10 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 	"universitySignalTransformation/pkg/lab1"
+	"universitySignalTransformation/pkg/lab10"
 	"universitySignalTransformation/pkg/lab2"
 	"universitySignalTransformation/pkg/lab3"
 	"universitySignalTransformation/pkg/lab4"
@@ -13,6 +15,8 @@ import (
 )
 
 func main() {
+	x := lab10.HammingCode("ZUT")
+	fmt.Println(lab10.HammingDecode(x))
 	/*
 		lab5.SaveAllExercise1Data("pkg/lab5/test_dla_3.txt", 3)
 		lab5.SaveAllExercise1Data("pkg/lab5/test_dla_6.txt", 6)
@@ -22,8 +26,8 @@ func main() {
 		lab7.SaveAllExercise1Data("pkg/lab7/test_dla_3.txt", 3)
 		lab7.SaveAllExercise1Data("pkg/lab7/test_dla_6.txt", 6)
 		lab7.SaveAllExercise1Data("pkg/lab7/test_dla_10.txt", 10)
-	*/
 
+	*/
 	//Lab1 endpoints
 	http.HandleFunc("/lab1/zad1", lab1.DrawExercise1)
 	http.HandleFunc("/lab1/zad2", lab1.DrawExercise2)

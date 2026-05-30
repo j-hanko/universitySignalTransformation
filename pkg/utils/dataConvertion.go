@@ -19,3 +19,13 @@ func FromSliceToScatterData(data []float64) []opts.ScatterData {
 	}
 	return items
 }
+
+func FromIntSliceToBitSlice(slice []int) []byte {
+	result := make([]byte, len(slice))
+
+	for i, v := range slice {
+		result[i] = byte(v)
+	}
+
+	return result
+}

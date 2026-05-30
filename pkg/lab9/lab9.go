@@ -13,7 +13,6 @@ import (
 
 const (
 	step = 5000
-	A    = 1
 	W    = 2
 	Tc   = 1
 )
@@ -22,9 +21,10 @@ func Demodulator(ASCII_word string) ([]float64, []float64, []float64, []float64,
 	bits := utils.ASCII_to_bit(ASCII_word)
 	B := len(bits)
 	Tb := Tc / float64(B)
+	fn := W / Tb
 	fn1 := (W + 1) / Tb
 	fn2 := (W + 2) / Tb
-	fs := int(1000 * fn2)
+	fs := int(1000 * fn)
 
 	slice_x1 := make([]float64, 0)
 	slice_x2 := make([]float64, 0)
@@ -77,12 +77,18 @@ func Demodulator(ASCII_word string) ([]float64, []float64, []float64, []float64,
 			end = len(slice_p)
 		}
 
-		decisionIndex := end - 1
+		mean := 0.0
+		amount := 0
+		for i := start; i < end; i++ {
+			mean += slice_p[i]
+			amount += 1
+		}
+		mean = mean / float64(amount)
 
 		var decision float64
 		var bitValue int
 
-		if slice_p[decisionIndex] > 0 {
+		if mean > 0 {
 			decision = 1.0
 			bitValue = 1
 		} else {
@@ -100,7 +106,7 @@ func Demodulator(ASCII_word string) ([]float64, []float64, []float64, []float64,
 	return z, slice_x1, slice_x2, slice_p1, slice_p2, slice_p, slice_c, decodedBits
 }
 
-func DrawDemodulator(w http.ResponseWriter, r *http.Request) {
+func DrawDemodulator(w http.ResponseWriter, _ *http.Request) {
 	ASCII_word := "bot"
 
 	img1, img2, img3, img4, img5, img6, img7, _ := Demodulator(ASCII_word)
@@ -108,8 +114,8 @@ func DrawDemodulator(w http.ResponseWriter, r *http.Request) {
 	bits := utils.ASCII_to_bit(ASCII_word)
 	B := len(bits)
 	Tb := Tc / float64(B)
-	fn2 := (W + 2) / Tb
-	fs := 1000 * fn2
+	fn := W / Tb
+	fs := 1000 * fn
 	realTc := float64(len(img1)) / float64(fs)
 
 	chart1 := charts.NewLine()

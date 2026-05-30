@@ -59,13 +59,7 @@ func Demodulator(ASCII_word, signal_choose string) ([]float64, []float64, []floa
 	}
 
 	if signal_choose == "ASK" {
-		maxP := 0.0
-		for _, v := range slice_p {
-			if v > maxP {
-				maxP = v
-			}
-		}
-		h = maxP / 2
+		h = 500
 	}
 
 	for bit := 0; bit < B; bit++ {
@@ -76,12 +70,17 @@ func Demodulator(ASCII_word, signal_choose string) ([]float64, []float64, []floa
 			end = len(slice_p)
 		}
 
-		decisionIndex := end - 1
+		mean := 0.0
+		amount := 0
+		for i := start; i < end; i++ {
+			mean += slice_p[i]
+			amount += 1
+		}
+		mean = mean / float64(amount)
 
 		var decision float64
 		var bitValue int
-
-		if slice_p[decisionIndex] > h {
+		if mean >= h {
 			decision = 1.0
 			bitValue = 1
 		} else {
