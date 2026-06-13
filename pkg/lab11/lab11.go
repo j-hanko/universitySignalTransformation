@@ -29,6 +29,45 @@ func createPMatrix() [][]byte {
 	return P
 }
 
+func createIdentityMatrix(size int) [][]byte {
+	I := make([][]byte, size)
+
+	for row := 0; row < size; row++ {
+		I[row] = make([]byte, size)
+
+		for column := 0; column < size; column++ {
+			if row == column {
+				I[row][column] = 1
+			} else {
+				I[row][column] = 0
+			}
+		}
+	}
+
+	return I
+}
+
+func createGMatrix() [][]byte {
+	P := createPMatrix()
+	I := createIdentityMatrix(k)
+
+	G := make([][]byte, k)
+
+	for row := 0; row < k; row++ {
+		G[row] = make([]byte, n)
+
+		for column := 0; column < m; column++ {
+			G[row][column] = P[row][column]
+		}
+
+		for column := 0; column < k; column++ {
+			G[row][m+column] = I[row][column]
+		}
+	}
+
+	return G
+}
+
 func HammingCode(inputWord string) (result []byte) {
 	fmt.Println("Kodowanie Hamminga\n")
 
@@ -42,7 +81,7 @@ func HammingCode(inputWord string) (result []byte) {
 	fmt.Println("Bity wejsciowe: ", input)
 	fmt.Println("Długość wejciowa: ", len(input), "\n---")
 
-	P := createPMatrix()
+	G := createGMatrix()
 
 	for i := 0; i < len(input); i = i + k {
 		byteTMP := make([]byte, n)
@@ -59,19 +98,17 @@ func HammingCode(inputWord string) (result []byte) {
 		x14 := input[i+9]
 		x15 := input[i+10]
 
-		for column := 0; column < m; column++ {
-			var p byte = 0
+		b := []byte{x3, x5, x6, x7, x9, x10, x11, x12, x13, x14, x15}
+
+		for column := 0; column < n; column++ {
+			var sum byte = 0
 
 			for row := 0; row < k; row++ {
-				multiplication := input[i+row] * P[row][column]
-				p = p ^ multiplication
+				multiplication := b[row] * G[row][column]
+				sum = sum ^ multiplication
 			}
 
-			byteTMP[column] = p
-		}
-
-		for j := 0; j < k; j++ {
-			byteTMP[m+j] = input[i+j]
+			byteTMP[column] = sum
 		}
 
 		result = append(result, byteTMP...)

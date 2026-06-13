@@ -18,13 +18,12 @@ const (
 	Tc   = 1
 )
 
-func Demodulator(ASCII_word, signal_choose string) ([]float64, []float64, []float64, []float64, []int) {
+func Demodulator(bits []int, signal_choose string) ([]float64, []float64, []float64, []float64, []int) {
 
 	if signal_choose != "ASK" && signal_choose != "PSK" {
 		panic("You can choose only ASK or PSK signal")
 	}
 
-	bits := utils.ASCII_to_bit(ASCII_word)
 	B := len(bits)
 	Tb := Tc / float64(B)
 	fn := W / Tb
@@ -110,9 +109,9 @@ func DrawDemodulator(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Niepoprawny signal. Użyj ?signal=ASK albo ?signal=PSK", http.StatusBadRequest)
 		return
 	}
-	img1, img2, img3, img4, _ := Demodulator(ASCII_word, signalChoose)
-
 	bits := utils.ASCII_to_bit(ASCII_word)
+	img1, img2, img3, img4, _ := Demodulator(bits, signalChoose)
+
 	B := len(bits)
 	Tb := Tc / float64(B)
 	fn := W / Tb

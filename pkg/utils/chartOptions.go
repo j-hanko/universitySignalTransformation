@@ -52,6 +52,16 @@ func LogSpectrumPoints(Tc, fs float64, spectrumDB []float64) []opts.ScatterData 
 	return points
 }
 
+func AlphaAxisLabels(alphaValues []float64) []string {
+
+	labels := make([]string, 0)
+	for _, alpha := range alphaValues {
+		labels = append(labels, fmt.Sprintf("%.2f", alpha))
+	}
+	return labels
+
+}
+
 // Chart description and options
 func SetChartOptions(line *charts.Line, title, subtitle, xAxisName string) {
 	line.SetGlobalOptions(

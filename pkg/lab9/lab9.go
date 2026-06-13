@@ -17,8 +17,7 @@ const (
 	Tc   = 1
 )
 
-func Demodulator(ASCII_word string) ([]float64, []float64, []float64, []float64, []float64, []float64, []float64, []int) {
-	bits := utils.ASCII_to_bit(ASCII_word)
+func Demodulator(bits []int) ([]float64, []float64, []float64, []float64, []float64, []float64, []float64, []int) {
 	B := len(bits)
 	Tb := Tc / float64(B)
 	fn := W / Tb
@@ -108,10 +107,10 @@ func Demodulator(ASCII_word string) ([]float64, []float64, []float64, []float64,
 
 func DrawDemodulator(w http.ResponseWriter, _ *http.Request) {
 	ASCII_word := "bot"
-
-	img1, img2, img3, img4, img5, img6, img7, _ := Demodulator(ASCII_word)
-
 	bits := utils.ASCII_to_bit(ASCII_word)
+
+	img1, img2, img3, img4, img5, img6, img7, _ := Demodulator(bits)
+
 	B := len(bits)
 	Tb := Tc / float64(B)
 	fn := W / Tb
