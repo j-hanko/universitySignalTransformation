@@ -18,13 +18,17 @@ const (
 	Tc   = 1
 )
 
-func Demodulator(bits []int, signal_choose string) ([]float64, []float64, []float64, []float64, []int) {
+func Demodulator(bits []int, signal_choose string, inputSignal ...[]float64) ([]float64, []float64, []float64, []float64, []int) {
 
 	if signal_choose != "ASK" && signal_choose != "PSK" {
 		panic("You can choose only ASK or PSK signal")
 	}
 
 	B := len(bits)
+	if B == 0 {
+		return []float64{}, []float64{}, []float64{}, []float64{}, []int{}
+	}
+
 	Tb := Tc / float64(B)
 	fn := W / Tb
 	fs := int(1000 * fn)
@@ -40,7 +44,13 @@ func Demodulator(bits []int, signal_choose string) ([]float64, []float64, []floa
 		phase = math.Pi
 	}
 
-	z := lab6.SignalGenerationExercise(bits, signal_choose)
+	var z []float64
+	if len(inputSignal) > 0 {
+		z = inputSignal[0]
+	} else {
+		z = lab6.SignalGenerationExercise(bits, signal_choose)
+	}
+
 	for n := 0; n < len(z); n++ {
 		t := float64(n) / float64(fs)
 		x := z[n] * (float64(A) * math.Sin(2*math.Pi*fn*t+phase))
@@ -48,6 +58,10 @@ func Demodulator(bits []int, signal_choose string) ([]float64, []float64, []floa
 	}
 
 	samplesPerBit := int(float64(fs) * Tb)
+	if samplesPerBit == 0 {
+		return z, slice_x, slice_p, slice_c, decodedBits
+	}
+
 	sum := 0.0
 	for i := 0; i < len(slice_x); i++ {
 		if i%samplesPerBit == 0 {
@@ -58,7 +72,7 @@ func Demodulator(bits []int, signal_choose string) ([]float64, []float64, []floa
 	}
 
 	if signal_choose == "ASK" {
-		h = 500
+		h = float64(samplesPerBit) * 0.15
 	}
 
 	for bit := 0; bit < B; bit++ {
@@ -75,16 +89,31 @@ func Demodulator(bits []int, signal_choose string) ([]float64, []float64, []floa
 			mean += slice_p[i]
 			amount += 1
 		}
+
+		if amount == 0 {
+			continue
+		}
+
 		mean = mean / float64(amount)
 
 		var decision float64
 		var bitValue int
-		if mean >= h {
-			decision = 1.0
-			bitValue = 1
+		if signal_choose == "ASK" {
+			if math.Abs(mean) >= h {
+				decision = 1.0
+				bitValue = 1
+			} else {
+				decision = 0.0
+				bitValue = 0
+			}
 		} else {
-			decision = 0.0
-			bitValue = 0
+			if mean >= h {
+				decision = 1.0
+				bitValue = 1
+			} else {
+				decision = 0.0
+				bitValue = 0
+			}
 		}
 
 		decodedBits = append(decodedBits, bitValue)

@@ -63,6 +63,8 @@ func main() {
 	//Lab12 endpoints
 	http.HandleFunc("/lab12/zad1/Hamming_7_4", lab12.DrawExercise1Hamming_7_4)
 	http.HandleFunc("/lab12/zad1/Hamming_15_11", lab12.DrawExercise1Hamming_15_11)
+	http.HandleFunc("/lab12/zad2/Hamming_7_4", lab12.DrawExercise2Hamming_7_4)
+	http.HandleFunc("/lab12/zad2/Hamming_15_11", lab12.DrawExercise2Hamming_15_11)
 
 	err := http.ListenAndServe(":8081", nil)
 	if err != nil {

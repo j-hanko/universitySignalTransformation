@@ -17,8 +17,12 @@ const (
 	Tc   = 1
 )
 
-func Demodulator(bits []int) ([]float64, []float64, []float64, []float64, []float64, []float64, []float64, []int) {
+func Demodulator(bits []int, inputSignal ...[]float64) ([]float64, []float64, []float64, []float64, []float64, []float64, []float64, []int) {
 	B := len(bits)
+	if B == 0 {
+		return []float64{}, []float64{}, []float64{}, []float64{}, []float64{}, []float64{}, []float64{}, []int{}
+
+	}
 	Tb := Tc / float64(B)
 	fn := W / Tb
 	fn1 := (W + 1) / Tb
@@ -33,7 +37,13 @@ func Demodulator(bits []int) ([]float64, []float64, []float64, []float64, []floa
 	slice_c := make([]float64, 0)
 	decodedBits := make([]int, 0)
 
-	z := lab6.SignalGenerationExercise(bits, "FSK")
+	var z []float64
+	if len(inputSignal) > 0 {
+		z = inputSignal[0]
+	} else {
+		z = lab6.SignalGenerationExercise(bits, "FSK")
+	}
+
 	for n := 0; n < len(z); n++ {
 		t := float64(n) / float64(fs)
 		x1 := z[n] * math.Sin(2.0*math.Pi*fn1*t)
@@ -43,6 +53,11 @@ func Demodulator(bits []int) ([]float64, []float64, []float64, []float64, []floa
 	}
 
 	samplesPerBit := len(z) / B
+
+	if samplesPerBit == 0 {
+		return z, slice_x1, slice_x2, slice_p1, slice_p2, slice_p, slice_c, decodedBits
+	}
+
 	sum1 := 0.0
 	sum2 := 0.0
 

@@ -122,3 +122,27 @@ func SetSpectrumChartOptions(line *charts.Line, title, subtitle string) {
 		}),
 	)
 }
+
+func SetBERChartOptions(chart *charts.Line, title string, subtitle string, xAxisName string) {
+	chart.SetGlobalOptions(
+		charts.WithTitleOpts(opts.Title{
+			Title:    title,
+			Subtitle: subtitle,
+			Left:     "20px",
+			Top:      "10px",
+		}),
+		charts.WithXAxisOpts(opts.XAxis{
+			Name: xAxisName,
+		}),
+		charts.WithYAxisOpts(opts.YAxis{
+			Name: "",
+			Min:  0,
+		}),
+		charts.WithGridOpts(opts.Grid{
+			Top:    "90px",
+			Left:   "70px",
+			Right:  "70px",
+			Bottom: "70px",
+		}),
+	)
+}

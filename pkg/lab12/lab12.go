@@ -26,8 +26,39 @@ func transmisionChannel(input []float64, alpha float64) (output []float64) {
 	return output
 }
 
-func SimpleTransmissionSystem(inputWord string, coderChoose string, signalModulator string, alpha float64) []byte {
-	//Coder
+func transmisionChannel2(input []float64, beta float64) (output []float64) {
+	output = make([]float64, len(input))
+
+	if len(input) == 0 {
+		return output
+	}
+
+	if beta == 0 {
+		for i := 0; i < len(input); i++ {
+			output[i] = input[i]
+		}
+		return output
+	}
+
+	for i := 0; i < len(input); i++ {
+		t := float64(i) / float64(len(input))
+
+		g := 0.0
+
+		if beta < 1.0 && t < 1.0-beta {
+			tmp := 1.0 - (t / (1.0 - beta))
+			g = tmp * tmp
+		} else {
+			g = 0.0
+		}
+
+		output[i] = input[i] * g
+	}
+
+	return output
+}
+
+func SimpleTransmissionSystem(inputWord string, coderChoose string, signalModulator string, parameter float64, transmisionChannelChoose string) ([]byte, []byte, []byte) { //Coder
 	var HammingCodeOutput []byte = make([]byte, 0)
 	if coderChoose == "Hamming_7_4" {
 		HammingCodeOutput = lab10.HammingCode(inputWord)
@@ -40,20 +71,26 @@ func SimpleTransmissionSystem(inputWord string, coderChoose string, signalModula
 	ModulatorOutput := lab6.SignalGenerationExercise(ModulatorInput, signalModulator)
 
 	//Transmision channel
-	yt := transmisionChannel(ModulatorOutput, alpha)
+	var yt []float64
+
+	if transmisionChannelChoose == "Exercise1" {
+		yt = transmisionChannel(ModulatorOutput, parameter)
+	} else if transmisionChannelChoose == "Exercise2" {
+		yt = transmisionChannel2(ModulatorOutput, parameter)
+	}
 
 	//Demodulation
-	ytInt := utils.FromFloatSliceToIntSlice(yt)
-	var DemodulatorOutput []int = make([]int, len(ytInt))
+	var DemodulatorOutput []int
 
 	if signalModulator == "ASK" || signalModulator == "PSK" {
-		_, _, _, _, DemodulatorOutput = lab8.Demodulator(ytInt, signalModulator)
+		_, _, _, _, DemodulatorOutput = lab8.Demodulator(ModulatorInput, signalModulator, yt)
 	} else if signalModulator == "FSK" {
-		_, _, _, _, _, _, _, DemodulatorOutput = lab9.Demodulator(ytInt)
+		_, _, _, _, _, _, _, DemodulatorOutput = lab9.Demodulator(ModulatorInput, yt)
 	}
 
 	//Decoding
 	HammingDecodeInput := utils.FromIntSliceToBitSlice(DemodulatorOutput)
+
 	var HammingDecodeOutput []byte = make([]byte, 0)
 	if coderChoose == "Hamming_7_4" {
 		HammingDecodeOutput = lab10.HammingDecode(HammingDecodeInput)
@@ -61,7 +98,7 @@ func SimpleTransmissionSystem(inputWord string, coderChoose string, signalModula
 		HammingDecodeOutput = lab11.HammingDecode(HammingDecodeInput)
 	}
 
-	return HammingDecodeOutput
+	return HammingDecodeOutput, HammingCodeOutput, HammingDecodeInput
 }
 
 func BER(input []byte, output []byte) float64 {
@@ -95,12 +132,10 @@ func GenerateBERDataExercise1(inputWord string, coderChoose string, signalModula
 	alphaValues := make([]float64, 0)
 	berValues := make([]float64, 0)
 
-	inputBits := utils.InputWordToBits(inputWord, coderChoose)
-
 	for i := 0; i < 10; i++ {
-		alpha := float64(i) * 3.0 / 9.0
+		alpha := float64(i) * 30.0 / 9.0
 
-		outputBits := SimpleTransmissionSystem(inputWord, coderChoose, signalModulator, alpha)
+		_, inputBits, outputBits := SimpleTransmissionSystem(inputWord, coderChoose, signalModulator, alpha, "Exercise1")
 		ber := BER(inputBits, outputBits)
 
 		alphaValues = append(alphaValues, alpha)
@@ -110,12 +145,29 @@ func GenerateBERDataExercise1(inputWord string, coderChoose string, signalModula
 	return alphaValues, berValues
 }
 
+func GenerateBERDataExercise2(inputWord string, coderChoose string, signalModulator string) ([]float64, []float64) {
+	betaValues := make([]float64, 0)
+	berValues := make([]float64, 0)
+
+	for i := 0; i < 10; i++ {
+		beta := float64(i) * 1.0 / 9.0
+
+		_, inputBits, outputBits := SimpleTransmissionSystem(inputWord, coderChoose, signalModulator, beta, "Exercise2")
+		ber := BER(inputBits, outputBits)
+
+		betaValues = append(betaValues, beta)
+		berValues = append(berValues, ber)
+	}
+
+	return betaValues, berValues
+}
+
 func DrawBERChartExercise1(inputWord string, coderChoose string, signalModulator string) *charts.Line {
 	alphaValues, berValues := GenerateBERDataExercise1(inputWord, coderChoose, signalModulator)
 
 	chart := charts.NewLine()
 
-	utils.SetChartOptions(chart, "Lab12 - Ćwiczenie 1", coderChoose+" - "+signalModulator, "Alpha")
+	utils.SetBERChartOptions(chart, "Lab12 - Ćwiczenie 1", coderChoose+" - "+signalModulator+" - Słowo informacyjne: "+inputWord, "Alpha")
 
 	chart.SetXAxis(utils.AlphaAxisLabels(alphaValues)).
 		AddSeries("BER", utils.FromSliceToLineData(berValues)).
@@ -127,26 +179,67 @@ func DrawBERChartExercise1(inputWord string, coderChoose string, signalModulator
 	return chart
 }
 
+func DrawBERChartExercise2(inputWord string, coderChoose string) *charts.Line {
+	betaValuesASK, berValuesASK := GenerateBERDataExercise2(inputWord, coderChoose, "ASK")
+	_, berValuesPSK := GenerateBERDataExercise2(inputWord, coderChoose, "PSK")
+	_, berValuesFSK := GenerateBERDataExercise2(inputWord, coderChoose, "FSK")
+
+	chart := charts.NewLine()
+
+	utils.SetBERChartOptions(chart, "Lab12 - Ćwiczenie 2", coderChoose+" - ASK/PSK/FSK - Słowo informacyjne: "+inputWord, "Beta")
+
+	chart.SetXAxis(utils.AlphaAxisLabels(betaValuesASK)).
+		AddSeries("ASK", utils.FromSliceToLineData(berValuesASK)).
+		AddSeries("PSK", utils.FromSliceToLineData(berValuesPSK)).
+		AddSeries("FSK", utils.FromSliceToLineData(berValuesFSK)).
+		SetSeriesOptions(charts.WithLineChartOpts(opts.LineChart{
+			Smooth:     opts.Bool(false),
+			ShowSymbol: opts.Bool(true),
+		}))
+
+	return chart
+}
+
 func DrawExercise1Hamming_7_4(w http.ResponseWriter, r *http.Request) {
 	inputWord := r.URL.Query().Get("word")
 
-	chartFSK := DrawBERChartExercise1(inputWord, "Hamming_7_4", "FSK")
 	chartASK := DrawBERChartExercise1(inputWord, "Hamming_7_4", "ASK")
 	chartPSK := DrawBERChartExercise1(inputWord, "Hamming_7_4", "PSK")
+	chartFSK := DrawBERChartExercise1(inputWord, "Hamming_7_4", "FSK")
 
 	page := components.NewPage()
-	page.AddCharts(chartFSK, chartASK, chartPSK)
+	page.AddCharts(chartASK, chartPSK, chartFSK)
 	page.Render(w)
 }
 
 func DrawExercise1Hamming_15_11(w http.ResponseWriter, r *http.Request) {
 	inputWord := r.URL.Query().Get("word")
 
-	chartFSK := DrawBERChartExercise1(inputWord, "Hamming_15_11", "FSK")
 	chartASK := DrawBERChartExercise1(inputWord, "Hamming_15_11", "ASK")
 	chartPSK := DrawBERChartExercise1(inputWord, "Hamming_15_11", "PSK")
+	chartFSK := DrawBERChartExercise1(inputWord, "Hamming_15_11", "FSK")
 
 	page := components.NewPage()
-	page.AddCharts(chartFSK, chartASK, chartPSK)
+	page.AddCharts(chartASK, chartPSK, chartFSK)
+	page.Render(w)
+}
+
+func DrawExercise2Hamming_7_4(w http.ResponseWriter, r *http.Request) {
+	inputWord := r.URL.Query().Get("word")
+
+	chart := DrawBERChartExercise2(inputWord, "Hamming_7_4")
+
+	page := components.NewPage()
+	page.AddCharts(chart)
+	page.Render(w)
+}
+
+func DrawExercise2Hamming_15_11(w http.ResponseWriter, r *http.Request) {
+	inputWord := r.URL.Query().Get("word")
+
+	chart := DrawBERChartExercise2(inputWord, "Hamming_15_11")
+
+	page := components.NewPage()
+	page.AddCharts(chart)
 	page.Render(w)
 }
