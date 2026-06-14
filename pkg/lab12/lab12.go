@@ -15,7 +15,7 @@ import (
 	"github.com/go-echarts/go-echarts/v2/opts"
 )
 
-func transmisionChannel(input []float64, alpha float64) (output []float64) {
+func TransmisionChannel(input []float64, alpha float64) (output []float64) {
 	output = make([]float64, len(input))
 
 	for i := 0; i < len(input); i++ {
@@ -26,7 +26,7 @@ func transmisionChannel(input []float64, alpha float64) (output []float64) {
 	return output
 }
 
-func transmisionChannel2(input []float64, beta float64) (output []float64) {
+func TransmisionChannel2(input []float64, beta float64) (output []float64) {
 	output = make([]float64, len(input))
 
 	if len(input) == 0 {
@@ -58,7 +58,8 @@ func transmisionChannel2(input []float64, beta float64) (output []float64) {
 	return output
 }
 
-func SimpleTransmissionSystem(inputWord string, coderChoose string, signalModulator string, parameter float64, transmisionChannelChoose string) ([]byte, []byte, []byte) { //Coder
+func SimpleTransmissionSystem(inputWord string, coderChoose string, signalModulator string, parameter float64, transmisionChannelChoose string) ([]byte, []byte, []byte) {
+	//Coder
 	var HammingCodeOutput []byte = make([]byte, 0)
 	if coderChoose == "Hamming_7_4" {
 		HammingCodeOutput = lab10.HammingCode(inputWord)
@@ -74,9 +75,9 @@ func SimpleTransmissionSystem(inputWord string, coderChoose string, signalModula
 	var yt []float64
 
 	if transmisionChannelChoose == "Exercise1" {
-		yt = transmisionChannel(ModulatorOutput, parameter)
+		yt = TransmisionChannel(ModulatorOutput, parameter)
 	} else if transmisionChannelChoose == "Exercise2" {
-		yt = transmisionChannel2(ModulatorOutput, parameter)
+		yt = TransmisionChannel2(ModulatorOutput, parameter)
 	}
 
 	//Demodulation

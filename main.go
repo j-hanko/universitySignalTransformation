@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"universitySignalTransformation/pkg/lab1"
 	"universitySignalTransformation/pkg/lab12"
+	"universitySignalTransformation/pkg/lab13"
 	"universitySignalTransformation/pkg/lab2"
 	"universitySignalTransformation/pkg/lab3"
 	"universitySignalTransformation/pkg/lab4"
@@ -66,6 +67,12 @@ func main() {
 	http.HandleFunc("/lab12/zad2/Hamming_7_4", lab12.DrawExercise2Hamming_7_4)
 	http.HandleFunc("/lab12/zad2/Hamming_15_11", lab12.DrawExercise2Hamming_15_11)
 
+	//Lab13 endpoints
+	http.HandleFunc("/lab13/zad1/Hamming_7_4/config1", lab13.DrawExercise13Part1Hamming_7_4_Config1)
+	http.HandleFunc("/lab13/zad1/Hamming_7_4/config2", lab13.DrawExercise13Part1Hamming_7_4_Config2)
+
+	http.HandleFunc("/lab13/zad1/Hamming_15_11/config1", lab13.DrawExercise13Part1Hamming_15_11_Config1)
+	http.HandleFunc("/lab13/zad1/Hamming_15_11/config2", lab13.DrawExercise13Part1Hamming_15_11_Config2)
 	err := http.ListenAndServe(":8081", nil)
 	if err != nil {
 		panic(err)
