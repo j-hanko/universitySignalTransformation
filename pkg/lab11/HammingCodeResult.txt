@@ -1,0 +1,15 @@
+Kodowanie Hamminga
+
+Bity wejsciowe:  [0 0 0 0 0 0 0 0 0 0 1 0 1 0 1 0 0 1 1 0 0 1 0 1 1 1 0 0 0 1 1 1 1 0 1 0 0 0 1 1 0 1 1 1 0 1 1 0 1 0 0 1 1 1 0 1 0 1 1 1 1 0 0 0 0 1]
+Długość wejciowa:  66
+---
+Bity wejściowe: 0 0 0 0 0 0 0 0 0 0 1  Bity wyjściowe: [1 1 1 1 0 0 0 0 0 0 0 0 0 0 1]
+Bity wejściowe: 0 1 0 1 0 0 1 1 0 0 1  Bity wyjściowe: [0 1 0 1 0 1 0 1 0 0 1 1 0 0 1]
+Bity wejściowe: 0 1 1 1 0 0 0 1 1 1 1  Bity wyjściowe: [0 0 1 0 0 1 1 1 0 0 0 1 1 1 1]
+Bity wejściowe: 0 1 0 0 0 1 1 0 1 1 1  Bity wyjściowe: [0 0 0 1 0 1 0 0 0 1 1 0 1 1 1]
+Bity wejściowe: 0 1 1 0 1 0 0 1 1 1 0  Bity wyjściowe: [1 0 1 0 0 1 1 0 1 0 0 1 1 1 0]
+Bity wejściowe: 1 0 1 1 1 1 0 0 0 0 1  Bity wyjściowe: [0 1 1 1 1 0 1 1 1 1 0 0 0 0 1]
+---
+Bity wyjściowe:  [1 1 1 1 0 0 0 0 0 0 0 0 0 0 1 0 1 0 1 0 1 0 1 0 0 1 1 0 0 1 0 0 1 0 0 1 1 1 0 0 0 1 1 1 1 0 0 0 1 0 1 0 0 0 1 1 0 1 1 1 1 0 1 0 0 1 1 0 1 0 0 1 1 1 0 0 1 1 1 1 0 1 1 1 1 0 0 0 0 1]
+Długość wyjściowa:  90
+Info: Poprawnie przeliczono długość
